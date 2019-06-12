@@ -38,7 +38,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -73,6 +75,23 @@ public class ServiceController {
 
         final Page<ServiceDTO> page = new PageImpl<>(content, pageable, total);
         return page;
+    }
+
+    @RequestMapping(value = "/getConsumer", method = RequestMethod.GET)
+    public Set<String> serviceDetail(@RequestParam String pattern,
+                                     @RequestParam String filter,
+                                     @PathVariable String env) {
+
+        final Set<ServiceDTO> serviceDTOS = providerService.getServiceDTOS(pattern, filter, env);
+
+        Map<String,String> consumerMap = new HashMap<>();
+        for (ServiceDTO serviceDTO : serviceDTOS){
+            List<Consumer> consumers = consumerService.findByService(serviceDTO.getService());
+            for (Consumer consumer : consumers){
+                consumerMap.put(consumer.getApplication(),"");
+            }
+        }
+        return consumerMap.keySet();
     }
 
     @RequestMapping(value = "/service/{service}", method = RequestMethod.GET)
