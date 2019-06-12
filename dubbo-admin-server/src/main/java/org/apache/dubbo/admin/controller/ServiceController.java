@@ -86,7 +86,8 @@ public class ServiceController {
 
         Map<String,String> consumerMap = new HashMap<>();
         for (ServiceDTO serviceDTO : serviceDTOS){
-            List<Consumer> consumers = consumerService.findByService(serviceDTO.getService());
+            String service = serviceDTO.getService()+":"+serviceDTO.getVersion();
+            List<Consumer> consumers = consumerService.findByService(service);
             for (Consumer consumer : consumers){
                 consumerMap.put(consumer.getApplication(),"");
             }
