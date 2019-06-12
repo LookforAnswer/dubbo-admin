@@ -1,3 +1,6 @@
+
+git pull
+
 mvn clean package -Dmaven.test.skip=true
 cd dubbo-admin-distribution/target
 
